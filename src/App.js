@@ -1,24 +1,43 @@
-import logo from './logo.svg';
+
 import './App.css';
+import {useState,useEffect,useRef} from 'react'
 
 function App() {
+  const [length,setlength] = useState(10);
+  const [char,setchar] = useState(false)
+  const [num,setnum]=useState(false)
+  const[input,setinput] = useState("")
+ const refd = useRef(null);
+    const passgene=useEffect(() => {
+      let string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      let number = "123456789"
+      let symbol = "!@#$%^&*()"
+        let pass =""
+        if(char){
+          string = string+symbol
+        }
+        if(num){
+          string =string + number
+        }
+      for(let i  = 1; i<=length;i++){
+            pass = pass +string.charAt( Math.floor((Math.random() * string.length) +1))
+      }
+      setinput(pass)
+  },[char,num,length])
+ const copytext=()=>{
+  refd.current.select();
+    navigator.clipboard.writeText(input);
+ }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+   <div>
+     <input type ="text"placeholder='Password' value={input}  ref={refd}></input>
+      <button onClick={copytext}> Copy Text</button>
+      <br></br>
+      <input type="range" min ="8" max="100" onChangeCapture={(e)=>{setlength(e.target.value)}} value = {length}/> length :{length} 
+            <br></br>
+      <input type="checkbox" defaultChecked={num} onClick={()=>{setnum((pre)=> !pre)}}/>Number
+      <input type="checkbox" defaultChecked={char} onClick={()=>{setchar((pre)=> !pre)}}/>Char
+   </div>
   );
 }
 
